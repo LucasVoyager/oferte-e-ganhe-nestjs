@@ -6,29 +6,33 @@ import {
     PrimaryKey,
     Table,
 } from 'sequelize-typescript'
-import { UsuarioModel } from './usuario.model'
 import { PermissaoPerfilModel } from './permissaoPerfil.model'
 
 @Table({
-    tableName: 'perfil',
+    tableName: 'permissoes',
     timestamps: true,
 })
-export class PerfilModel extends Model {
+export class PermissoesModel extends Model {
     @PrimaryKey
     @Column({
         type: DataType.INTEGER,
         autoIncrement: true,
-        field: 'id_perfil',
+        field: 'id_permissao',
     })
-    id_perfil: number
+    id_permissao: number
     @Column({
         type: DataType.STRING(55),
         allowNull: false,
-        field: 'nome_perfil',
+        field: 'nome_permissao',
     })
-    nome_perfil: string
-    @HasMany(() => UsuarioModel)
-    usuarios: UsuarioModel[]
+    nome_permissao: string
+    @Column({
+        type: DataType.STRING(105),
+        allowNull: false,
+        field: 'descricao',
+    })
+    descricao: string
+
     @HasMany(() => PermissaoPerfilModel)
-    perfilPermissoes: PermissaoPerfilModel[]
+    permissoesPerfil: PermissaoPerfilModel[]
 }

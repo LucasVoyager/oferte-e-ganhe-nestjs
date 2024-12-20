@@ -1,10 +1,14 @@
 import {
     Column,
     DataType,
+    HasMany,
     Model,
     PrimaryKey,
     Table,
 } from 'sequelize-typescript'
+import { UsuarioModel } from './usuario.model'
+import { EstoqueModel } from './estoque.model'
+import { TransacaoModel } from './transacao.model'
 
 @Table({
     tableName: 'loja',
@@ -29,4 +33,11 @@ export class LojaModel extends Model {
         field: 'cep_loja',
     })
     cep_loja: string
+
+    @HasMany(() => UsuarioModel)
+    usuarios: UsuarioModel[]
+    @HasMany(() => EstoqueModel)
+    estoques: EstoqueModel[]
+    @HasMany(() => TransacaoModel)
+    transacoes: TransacaoModel[]
 }
