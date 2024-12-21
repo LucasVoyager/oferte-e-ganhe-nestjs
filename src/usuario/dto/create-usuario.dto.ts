@@ -1,4 +1,5 @@
 export class CreateUsuarioDto {
+    readonly matricula_usuario: number
     readonly nome: string
     readonly email: string
     readonly senha: string

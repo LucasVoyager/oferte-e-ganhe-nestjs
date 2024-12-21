@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
-import { InjectModel } from '@nestjs/sequelize'
+import {
+    ConflictException,
+    Inject,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common'
 import { UsuarioModel } from 'src/core/models/usuario.model'
 import { CreateUsuarioDto } from './dto/create-usuario.dto'
 import { UpdateUsuarioDto } from './dto/update-usuario.dto'
@@ -7,16 +11,31 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto'
 @Injectable()
 export class UsuariosService {
     constructor(
-        @InjectModel(UsuarioModel)
+        @Inject('UsuarioModel')
         private readonly usuarioModel: typeof UsuarioModel,
     ) {}
 
     async create(createUsuarioDto: CreateUsuarioDto): Promise<UsuarioModel> {
-        return this.usuarioModel.create({ ...createUsuarioDto })
+        const verificaUsuario = await this.usuarioModel.findByPk(
+            +createUsuarioDto.matricula_usuario,
+        )
+        if (!verificaUsuario) {
+            return this.usuarioModel.create({ ...createUsuarioDto })
+        } else {
+            throw new ConflictException(
+                `Usuario ja cadastrado: matricula existente: ${createUsuarioDto.matricula_usuario}`,
+            )
+        }
     }
 
     async findAll(): Promise<UsuarioModel[]> {
-        return this.usuarioModel.findAll({ include: { all: true } })
+        const usuarios = await this.usuarioModel.findAll({
+            include: { all: true },
+        })
+        if (usuarios.length === 0) {
+            throw new NotFoundException('Nenhum usuario encontrado')
+        }
+        return usuarios
     }
 
     async findOne(matricula_usuario: number) {

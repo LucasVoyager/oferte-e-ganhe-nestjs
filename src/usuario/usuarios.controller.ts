@@ -25,21 +25,23 @@ export class UsuariosController {
         return this.usuariosService.findAll()
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.usuariosService.findOne(+id)
+    @Get(':matricula_usuario')
+    findOne(@Param('matricula_usuario') matricula_usuario: number) {
+        return this.usuariosService.findOne(+matricula_usuario)
     }
 
-    @Patch(':id')
+    @Patch(':matricula_usuario')
     update(
-        @Param('id') id: string,
+        @Param('matricula_usuario') matricula_usuario: number,
         @Body() updateUsuarioDto: UpdateUsuarioDto,
     ) {
-        return this.usuariosService.update(+id, updateUsuarioDto)
+        this.usuariosService.update(+matricula_usuario, updateUsuarioDto)
+        return this.usuariosService.findOne(+matricula_usuario)
     }
 
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.usuariosService.remove(+id)
+    @Delete(':matricula_usuario')
+    remove(@Param('matricula_usuario') matricula_usuario: number) {
+        this.usuariosService.remove(+matricula_usuario)
+        return `Usuario com matricula ${matricula_usuario} foi deletado!`
     }
 }
